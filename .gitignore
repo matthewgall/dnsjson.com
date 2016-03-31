@@ -1,0 +1,18 @@
+## virtualenv ##
+bin/
+include/
+lib/
+.Python
+
+## pip ##
+pip-selfcheck.json
+
+## pylint ##
+*.pylint
+
+## codio ##
+.codio
+local/
+
+## application specific ##
+db/*.json
