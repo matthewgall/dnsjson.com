@@ -23,6 +23,34 @@
                 <pre>curl -X GET https://dnsjson.com/{{name}}/{{type}}.json</pre>
             </div>
         </div>
+        
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Need to lookup something else?</h3>
+            </div>
+            <div class="panel-body">
+                <form class="form-inline" method="POST" action="/">
+                    <fieldset>
+                        <div class="form-group">
+                            <input type="text" name="recordName" class="form-control" id="recordName"
+                                placeholder="{{name}}">
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="recordType" name="recordType">
+                                <option>Type</option>
+                                % for type in recTypes:
+                                    <option>{{type}}</option>
+                                %end
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Lookup</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+
     </div>
 </div>
 % include('global/footer.tpl')

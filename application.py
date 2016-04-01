@@ -66,7 +66,8 @@ def loadRecord(record="", type="", ext="html"):
     content = {
         'name': record,
         'type': type,
-        'records': recSet
+        'records': recSet,
+        'recTypes': appRecords
     }
 
     if ext == "json" or response.content_type == 'application/json' :
