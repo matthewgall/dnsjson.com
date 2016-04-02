@@ -71,6 +71,7 @@ def loadRecord(record="", type="", ext="html"):
     }
 
     if ext == "json" or response.content_type == 'application/json' :
+        del content['recTypes']
         jsonContent = {
             "results": content
         }
