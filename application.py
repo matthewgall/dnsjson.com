@@ -118,17 +118,12 @@ if __name__ == '__main__':
     serverHost = os.getenv('IP', 'localhost')
     serverPort = os.getenv('PORT', '5000')
 
-    logentriesToken = os.getenv('LOGENTRIES_TOKEN', '')
-
     # Now we're ready, so start the server
     # Instantiate the logger
     log = logging.getLogger('log')
     console = logging.StreamHandler()
     log.setLevel(logging.INFO)
     log.addHandler(console)
-
-    if logentriesToken != '':
-        log.addHandler(LogentriesHandler(logentriesToken))
     
     # Now we're ready, so start the server
     try:
