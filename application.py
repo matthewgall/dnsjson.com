@@ -53,6 +53,9 @@ def loadRecord(record="", type="", ext="html"):
     elif ext == "txt":
         response.content_type = 'text/plain'
 
+    if not type in appRecords:
+        return returnError(404, "Not Found", "text/html")
+    
     # We make a request to get information
     data = requests.get(appLookup + "/" + record + "/" + type)
 
