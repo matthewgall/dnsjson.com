@@ -112,7 +112,7 @@ if __name__ == '__main__':
     
     appReload = bool(os.getenv('APP_RELOAD', False))
     appLookup = os.getenv('APP_LOOKUP', "http://dig.mgall.me/8.8.8.8:53")
-    appRecords = ["A", "AAAA", "CNAME", "DS", "MX", "TXT"]
+    appRecords = ["A", "AAAA", "CNAME", "DS", "MX", "SOA", "TXT"]
 
     serverHost = os.getenv('IP', 'localhost')
     serverPort = os.getenv('PORT', '5000')
