@@ -53,11 +53,11 @@ def loadRecord(record="", type="", ext="html"):
     elif ext in ["txt","text"]:
         response.content_type = 'text/plain'
 
-    if not type in appRecords:
+    if not type.upper() in appRecords:
         return returnError(404, "Not Found", "text/html")
     
     # We make a request to get information
-    data = requests.get(appLookup + "/" + record + "/" + type)
+    data = requests.get(appLookup + "/" + record + "/" + type.upper())
 
     recSet = []   
     try:
@@ -68,7 +68,7 @@ def loadRecord(record="", type="", ext="html"):
     
     content = {
         'name': record,
-        'type': type,
+        'type': type.upper(),
         'records': recSet,
         'recTypes': appRecords
     }
