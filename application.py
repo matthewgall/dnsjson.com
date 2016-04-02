@@ -45,12 +45,12 @@ def loadRecord(record="", type="", ext="html"):
     if record == "" or type == "":
         return returnError(404, "Not Found", "text/html")
     
-    if not ext in ["html","txt","json"]:
+    if not ext in ["html","txt", "text","json"]:
         ext = "html"
     
     if ext == "json":
         response.content_type = 'application/json'    
-    elif ext == "txt":
+    elif ext in ["txt","text"]:
         response.content_type = 'text/plain'
 
     if not type in appRecords:
@@ -79,7 +79,7 @@ def loadRecord(record="", type="", ext="html"):
             "results": content
         }
         return json.dumps(jsonContent)
-    elif ext == "txt" or response.content_type == "text/plain":
+    elif ext in ["txt","text"] or response.content_type == "text/plain":
         return "\r\n".join(recSet)
     else:
         return template('rec', content)
