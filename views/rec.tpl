@@ -20,7 +20,12 @@
                 <p>
                 Verify the results using curl:
                 </p>
-                <pre>curl -X GET https://dnsjson.com/{{name}}/{{type}}.json</pre>
+                <pre>curl https://dnsjson.com/{{name}}/{{type}}.json</pre>
+                
+                <p>
+                Need the results in plain text?
+                </p>
+                <pre>curl https://dnsjson.com/{{name}}/{{type}}.txt</pre>
             </div>
         </div>
         
