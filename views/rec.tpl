@@ -21,7 +21,7 @@
                 Verify the results using curl:
                 </p>
                 <pre>curl https://dnsjson.com/{{name}}/{{type}}.json</pre>
-                
+
                 <p>
                 Need the results in plain text?
                 </p>
