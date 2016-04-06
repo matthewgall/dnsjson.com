@@ -6,7 +6,7 @@
             <p id="counterVal" style="font-size: 42px;">
                 <pre>
 % for rec in records:
-    {{rec}}
+{{rec}}
 % end
 </pre>
             </p>
