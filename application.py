@@ -62,7 +62,7 @@ def loadRecord(record="", type="", ext="html"):
     recSet = []   
     try:
         for rec in data.json()['answer']:
-            recSet.append(rec['rdata'])
+            recSet.append(rec['rdata'].replace('"', '').strip())
     except:
         recSet.append("Unable to identify any records with type: " + type)
     
@@ -75,9 +75,11 @@ def loadRecord(record="", type="", ext="html"):
 
     if ext == "json" or response.content_type == 'application/json' :
         del content['recTypes']
+        
         jsonContent = {
             "results": content
         }
+            
         return json.dumps(jsonContent)
     elif ext in ["txt","text"] or response.content_type == "text/plain":
         return "\r\n".join(recSet)
