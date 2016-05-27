@@ -133,6 +133,6 @@ if __name__ == '__main__':
     # Now we're ready, so start the server
     try:
         log.info("Successfully started application server")
-        app.run(host=serverHost, port=serverPort, reloader=bool(appReload))
+        app.run(host=serverHost, port=serverPort, server='paste', reloader=bool(appReload))
     except:
         log.error("Failed to start application server")
