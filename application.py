@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 
-import os
-import logging
-import json
-
+import os, logging, json
 import requests
 from bottle import route, request, response, redirect, hook, error, default_app, view, static_file, template, HTTPError
 
@@ -92,18 +89,16 @@ def postIndex():
     try:
         recordName = request.forms.get('recordName')
         recordType = request.forms.get('recordType')
+
+        if not recordType == "Type" and not recordType in appRecords:
+            raise ValueError
+        if recordName == "" or recordType == "Type":
+            raise ValueError
+        return redirect("/" + recordName + "/" + recordType)
+    except ValueError:
+        return returnError(404, "Not Found", "text/html")
     except AttributeError:
         return returnError(404, "Not Found", "text/html")
-    
-    # Handle someone trying to modify the <select>
-    if not recordType == "Type" and not recordType in appRecords:
-        return returnError(404, "Not Found", "text/html")
-    
-    # Now empty record checking
-    if recordName == "" or recordType == "Type":
-        return returnError(404, "Not Found", "text/html")
-    
-    return redirect("/" + recordName + "/" + recordType)
 
 @route('/')
 def index():
@@ -116,7 +111,6 @@ if __name__ == '__main__':
     
     app = default_app()
     
-    appReload = bool(os.getenv('APP_RELOAD', False))
     appLookup = os.getenv('APP_LOOKUP', "http://dig.mgall.me/8.8.8.8:53")
     appRecords = ["A", "AAAA", "CNAME", "DS", "DNSKEY", "MX", "NS", "NSEC", "NSEC3", "RRSIG", "SOA", "TXT"]
 
@@ -132,7 +126,6 @@ if __name__ == '__main__':
     
     # Now we're ready, so start the server
     try:
-        log.info("Successfully started application server")
-        app.run(host=serverHost, port=serverPort, server='paste', reloader=bool(appReload))
+        app.run(host=serverHost, port=serverPort, server='cherrypy')
     except:
         log.error("Failed to start application server")
