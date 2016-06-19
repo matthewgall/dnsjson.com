@@ -38,19 +38,18 @@ def return_version():
 @route('/<record>/<type>')
 @route('/<record>/<type>.<ext>')
 def loadRecord(record="", type="", ext="html"):
-    
-    if record == "" or type == "":
-        return returnError(404, "Not Found", "text/html")
-    
-    if not ext in ["html","txt", "text","json"]:
-        ext = "html"
-    
-    if ext == "json":
-        response.content_type = 'application/json'    
-    elif ext in ["txt","text"]:
-        response.content_type = 'text/plain'
-
-    if not type.upper() in appRecords:
+    try:
+        if record == "" or type == "":
+            raise ValueError
+        if not type.upper() in appRecords:
+            raise ValueError
+        if not ext in ["html","txt", "text","json"]:
+            ext = "html"
+        if ext == "json":
+            response.content_type = 'application/json'    
+        elif ext in ["txt","text"]:
+            response.content_type = 'text/plain'
+    except ValueError:
         return returnError(404, "Not Found", "text/html")
     
     # We make a request to get information
