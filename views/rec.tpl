@@ -38,7 +38,7 @@
                     <fieldset>
                         <div class="form-group">
                             <input type="text" name="recordName" class="form-control" id="recordName"
-                                placeholder="{{name}}">
+                                placeholder="{{name}}" value="{{name}}">
                         </div>
                         <div class="form-group">
                             <select class="form-control" id="recordType" name="recordType">
