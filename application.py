@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os, logging, json
+import os, logging, json, datetime
 import requests
 from bottle import route, request, response, redirect, hook, error, default_app, view, static_file, template, HTTPError
 
@@ -17,6 +17,14 @@ def determine_content_type():
         response.content_type = 'application/json'    
     elif request.headers.get('Accept') == "text/plain":
         response.content_type = 'text/plain'
+
+@hook('after_request')
+def log_to_console():
+    log.info("{} {} {}".format(
+        datetime.datetime.now(),
+        response.status_code,
+        request.url
+    ))
 
 @route('/static/<filepath:path>')
 def server_static(filepath):
@@ -51,9 +59,9 @@ def loadRecord(record="", type="", ext="html"):
             response.content_type = 'text/plain'
     except ValueError:
         return returnError(404, "Not Found", "text/html")
-    
+
     # We make a request to get information
-    data = requests.get(appLookup + "/" + record + "/" + type.upper())
+    data = requests.get("{}/{}/{}".format(appLookup, record, type.upper()))
 
     recSet = []   
     try:
@@ -61,7 +69,7 @@ def loadRecord(record="", type="", ext="html"):
             recSet.append(rec['rdata'].replace('"', '').strip())
     except:
         recSet.append("Unable to identify any records with type: " + type)
-    
+
     content = {
         'name': record,
         'type': type.upper(),
@@ -93,7 +101,7 @@ def postIndex():
             raise ValueError
         if recordName == "" or recordType == "Type":
             raise ValueError
-        return redirect("/" + recordName + "/" + recordType)
+        return redirect("/{}/{}".format(recordName, recordType))
     except ValueError:
         return returnError(404, "Not Found", "text/html")
     except AttributeError:
@@ -107,9 +115,9 @@ def index():
     return template("home", content)
 
 if __name__ == '__main__':
-    
+
     app = default_app()
-    
+
     appLookup = os.getenv('APP_LOOKUP', "http://dig.mgall.me/8.8.8.8:53")
     appRecords = ["A", "AAAA", "CNAME", "DS", "DNSKEY", "MX", "NS", "NSEC", "NSEC3", "RRSIG", "SOA", "TXT"]
 
@@ -122,7 +130,7 @@ if __name__ == '__main__':
     console = logging.StreamHandler()
     log.setLevel(logging.INFO)
     log.addHandler(console)
-    
+
     # Now we're ready, so start the server
     try:
         app.run(host=serverHost, port=serverPort, server='cherrypy')
