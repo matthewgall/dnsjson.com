@@ -2,7 +2,8 @@
 
 import os, logging, json, datetime
 import requests
-from bottle import route, request, response, redirect, hook, error, default_app, view, static_file, template, HTTPError
+from bottle import route, request, response, redirect, hook, error, default_app, view, static_file, template
+from logentries import LogentriesHandler
 
 @error('404')
 @error('403')
@@ -131,6 +132,9 @@ if __name__ == '__main__':
     log.setLevel(logging.INFO)
     log.addHandler(console)
 
+    if not os.getenv('LOGENTRIES_TOKEN', '') is '':
+        log.addHandler(LogentriesHandler(os.getenv('LOGENTRIES_TOKEN')))
+        
     # Now we're ready, so start the server
     try:
         app.run(host=serverHost, port=serverPort, server='cherrypy')
