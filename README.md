@@ -1,6 +1,6 @@
 # dnsjson.com
 
-![](https://badge.imagelayers.io/matthewgall/dnsjson.com:latest.svg) [![Docker Repository on Quay](https://quay.io/repository/matthewgall/dnsjson.com/status "Docker Repository on Quay")](https://quay.io/repository/matthewgall/dnsjson.com)
+[![Docker Repository on Quay](https://quay.io/repository/matthewgall/dnsjson.com/status "Docker Repository on Quay")](https://quay.io/repository/matthewgall/dnsjson.com)
 
 DNS and dig is ugly, and implementing them into your web application is even uglier. But not any longer, for here is dnsjson.com
 
