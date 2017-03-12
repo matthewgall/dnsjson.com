@@ -1,4 +1,4 @@
 bottle
 requests
-cherrypy
+tornado
 logentries
