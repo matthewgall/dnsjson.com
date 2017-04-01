@@ -20,9 +20,9 @@ def resolveDomain(domain, recordType, dnsAddr):
 					records.append(data.address)
 				elif recordType in ['TXT']:
 					for rec in data.strings:
-						records.append(rec)
+						records.append(rec.replace('"', '').strip())
 				else:
-					records.append(str(data))
+					records.append(str(data).replace('"', '').strip())
 		return records
 	except dns.resolver.NoAnswer:
 		return records
@@ -57,6 +57,14 @@ def log_to_console():
 def server_static(filepath):
 	return static_file(filepath, root='views/static')
 
+@route('/servers')
+def return_servers():
+	try:
+		response.content_type = 'text/plain'
+		return "\r\n".join(appResolver.split(","))
+	except:
+		return "Unable to open servers file."
+		
 @route('/version')
 def return_version():
 	try:
@@ -89,18 +97,14 @@ def loadRecord(record="", type="", ext="html"):
 
 	# We make a request to get information
 	data = resolveDomain(record, type.upper(), appResolver)
-	
-	recSet = []
-	if len(data) > 0:
-		for rec in data:
-			recSet.append(rec.replace('"', '').strip())
-	else:
-		recSet.append("Unable to identify any records with type: {}".format(type))
+
+	if not len(data) > 0:
+		data.append("Unable to identify any records with type: {}".format(type))
 
 	content = {
 		'name': record,
 		'type': type.upper(),
-		'records': recSet,
+		'records': data,
 		'recTypes': appRecords
 	}
 
