@@ -6,11 +6,15 @@ import dns.resolver
 from bottle import route, request, response, redirect, hook, error, default_app, view, static_file, template
 from logentries import LogentriesHandler
 
-def resolveDomain(domain, recordType, dnsAddr='8.8.8.8'):
+def resolveDomain(domain, recordType, dnsAddr):
 	try:
 		records = []
+		
+		resolver = dns.resolver.Resolver()
+		resolver.nameservers = dnsAddr.split(',')
+		
 		if recordType in appRecords:
-			lookup = dns.resolver.query(domain, recordType)
+			lookup = resolver.query(domain, recordType)
 			for data in lookup:
 				if recordType in ['A', 'AAAA']:
 					records.append(data.address)
@@ -84,7 +88,7 @@ def loadRecord(record="", type="", ext="html"):
 		return returnError(404, "Not Found", "text/html")
 
 	# We make a request to get information
-	data = resolveDomain(record, type.upper())
+	data = resolveDomain(record, type.upper(), appResolver)
 	
 	recSet = []
 	if len(data) > 0:
@@ -142,7 +146,8 @@ if __name__ == '__main__':
 	app = default_app()
 
 	appRecords = ["A", "AAAA", "CNAME", "DS", "DNSKEY", "MX", "NS", "NSEC", "NSEC3", "RRSIG", "SOA", "TXT"]
-
+	appResolver = os.getenv('APP_RESOLVER', '8.8.8.8')
+	
 	serverHost = os.getenv('IP', 'localhost')
 	serverPort = os.getenv('PORT', '5000')
 
