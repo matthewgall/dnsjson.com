@@ -13,10 +13,6 @@ To make editing easy, we're using Cloud9, an online IDE to allow you to get star
 ## Deploying
 Deploying dnsjson.com is easy using Docker:
 
-    docker run -p 80:5000 matthewgall/dnsjson.com
-
-Or via my quay.io mirror:
-
     docker run -p 80:5000 quay.io/matthewgall/dnsjson.com
 
 Honestly, that simple (and none of that one line wget direct to your terminal)
@@ -34,7 +30,7 @@ Returns the current running version of dnsjson.com from the released commit hash
 
     The MIT License (MIT)
 
-    Copyright (c) 2015 - 2016 Matthew Gall
+    Copyright (c) 2015 - 2017 Matthew Gall
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
