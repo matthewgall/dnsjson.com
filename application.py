@@ -141,7 +141,6 @@ if __name__ == '__main__':
 
 	app = default_app()
 
-	appLookup = os.getenv('APP_LOOKUP', "http://dig.mgall.me/8.8.8.8:53")
 	appRecords = ["A", "AAAA", "CNAME", "DS", "DNSKEY", "MX", "NS", "NSEC", "NSEC3", "RRSIG", "SOA", "TXT"]
 
 	serverHost = os.getenv('IP', 'localhost')
