@@ -117,7 +117,7 @@ def loadRecord(record="", type="", ext="html"):
 			
 		return json.dumps(jsonContent)
 	elif ext in ["txt","text"] or response.content_type == "text/plain":
-		return "\r\n".join(recSet)
+		return "\r\n".join(data)
 	else:
 		return template('rec', content)
 
