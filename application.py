@@ -24,6 +24,8 @@ def resolveDomain(domain, recordType, dnsAddr):
 				else:
 					records.append(str(data).replace('"', '').strip())
 		return records
+	except dns.resolver.NXDOMAIN:
+		return records
 	except dns.resolver.NoAnswer:
 		return records
 	except dns.exception.Timeout:
