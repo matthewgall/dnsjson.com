@@ -19,7 +19,7 @@ def resolveDomain(domain, recordType, dnsAddr):
 					records.append(data.address)
 				elif recordType in ['TXT']:
 					for rec in data.strings:
-						records.append(rec.replace('"', '').strip())
+						records.append(rec.decode("utf-8").replace('"', '').strip())
 				else:
 					records.append(str(data).replace('"', '').strip())
 		return records
