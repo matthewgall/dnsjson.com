@@ -1,10 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-import os, logging, json, datetime
+import os, logging, argparse, json, datetime
 import requests
 import dns.resolver
 from bottle import route, request, response, redirect, hook, error, default_app, view, static_file, template
-from logentries import LogentriesHandler
 
 def resolveDomain(domain, recordType, dnsAddr):
 	try:
@@ -13,7 +12,7 @@ def resolveDomain(domain, recordType, dnsAddr):
 		resolver = dns.resolver.Resolver()
 		resolver.nameservers = dnsAddr.split(',')
 		
-		if recordType in appRecords:
+		if recordType in args.records.split(','):
 			lookup = resolver.query(domain, recordType)
 			for data in lookup:
 				if recordType in ['A', 'AAAA']:
@@ -63,7 +62,7 @@ def server_static(filepath):
 def return_servers():
 	try:
 		response.content_type = 'text/plain'
-		return "\r\n".join(appResolver.split(","))
+		return "\r\n".join(args.resolver.split(","))
 	except:
 		return "Unable to open servers file."
 		
@@ -86,7 +85,7 @@ def loadRecord(record="", type="", ext="html"):
 	try:
 		if record == "" or type == "":
 			raise ValueError
-		if not type.upper() in appRecords:
+		if not type.upper() in args.records.split(','):
 			raise ValueError
 		if not ext in ["html","txt", "text","json"]:
 			ext = "html"
@@ -98,7 +97,7 @@ def loadRecord(record="", type="", ext="html"):
 		return returnError(404, "Not Found", "text/html")
 
 	# We make a request to get information
-	data = resolveDomain(record, type.upper(), appResolver)
+	data = resolveDomain(record, type.upper(), args.resolver)
 
 	if not len(data) > 0:
 		data.append("Unable to identify any records with type: {}".format(type))
@@ -107,7 +106,7 @@ def loadRecord(record="", type="", ext="html"):
 		'name': record,
 		'type': type.upper(),
 		'records': data,
-		'recTypes': appRecords
+		'recTypes': args.records.split(',')
 	}
 
 	if ext == "json" or response.content_type == 'application/json' :
@@ -130,7 +129,7 @@ def postIndex():
 		recordName = request.forms.get('recordName')
 		recordType = request.forms.get('recordType')
 
-		if not recordType == "Type" and not recordType in appRecords:
+		if not recordType == "Type" and not recordType in args.records.split(','):
 			raise ValueError
 		if recordName == "" or recordType == "Type":
 			raise ValueError
@@ -143,32 +142,40 @@ def postIndex():
 @route('/')
 def index():
 	content = {
-		'recTypes': appRecords
+		'recTypes': args.records.split(',')
 	}
 	return template("home", content)
 
 if __name__ == '__main__':
 
-	app = default_app()
+	parser = argparse.ArgumentParser()
 
-	appRecords = ["A", "AAAA", "CNAME", "DS", "DNSKEY", "MX", "NS", "NSEC", "NSEC3", "RRSIG", "SOA", "TXT"]
-	appResolver = os.getenv('APP_RESOLVER', '8.8.8.8')
-	
-	serverHost = os.getenv('IP', 'localhost')
-	serverPort = os.getenv('PORT', '5000')
+	# Server settings
+	parser.add_argument("-i", "--host", default=os.getenv('IP', '127.0.0.1'), help="server ip")
+	parser.add_argument("-p", "--port", default=os.getenv('PORT', 5000), help="server port")
 
-	# Now we're ready, so start the server
-	# Instantiate the logger
-	log = logging.getLogger('log')
-	console = logging.StreamHandler()
-	log.setLevel(logging.INFO)
-	log.addHandler(console)
+	# Redis settings
+	parser.add_argument("--redis-host", default=os.getenv('REDIS_HOST', 'redis'), help="redis hostname")
+	parser.add_argument("--redis-port", default=os.getenv('REDIS_PORT', 6379), help="redis port")
+	parser.add_argument("--redis-pw", default=os.getenv('REDIS_PW', ''), help="redis password")
+	parser.add_argument("--redis-ttl", default=os.getenv('REDIS_TTL', 60), help="redis time to cache records")
 
-	if not os.getenv('LOGENTRIES_TOKEN', '') is '':
-		log.addHandler(LogentriesHandler(os.getenv('LOGENTRIES_TOKEN')))
-		
-	# Now we're ready, so start the server
+	# Application settings
+	parser.add_argument("--records", default=os.getenv('APP_RECORDS', "A,AAAA,CNAME,DS,DNSKEY,MX,NS,NSEC,NSEC3,RRSIG,SOA,TXT"), help="supported records")
+	parser.add_argument("--resolver", default=os.getenv('APP_RESOLVER', '8.8.8.8'), help="resolver address")
+
+	# Verbose mode
+	parser.add_argument("--verbose", "-v", help="increase output verbosity", action="store_true")
+	args = parser.parse_args()
+
+	if args.verbose:
+		logging.basicConfig(level=logging.DEBUG)
+	else:
+		logging.basicConfig(level=logging.INFO)
+	log = logging.getLogger(__name__)
+
 	try:
-		app.run(host=serverHost, port=serverPort, server='tornado')
+		app = default_app()
+		app.run(host=args.host, port=args.port, server='tornado')
 	except:
-		log.error("Failed to start application server")
+		log.error("Unable to start server on {}:{}".format(args.host, args.port))

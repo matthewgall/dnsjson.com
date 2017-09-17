@@ -1,5 +1,4 @@
 bottle
 requests
 tornado
-logentries
 dnspython
