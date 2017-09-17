@@ -1,0 +1,21 @@
+services:
+  - docker:dind
+
+stages:
+  - build
+
+build:
+  image: docker:latest
+  stage: build
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker login -u "$QUAYIO_REGISTRY_USER" -p "$QUAYIO_REGISTRY_PASSWORD" $QUAYIO_REGISTRY
+    - docker login -u "$HEROKU_REGISTRY_USER" -p "$HEROKU_REGISTRY_PASSWORD" $HEROKU_REGISTRY
+
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
+    - docker tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" "$QUAYIO_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+    - docker tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" "$HEROKU_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+    - docker push "$QUAYIO_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+    - docker push "$HEROKU_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
