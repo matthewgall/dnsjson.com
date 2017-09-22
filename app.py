@@ -5,6 +5,23 @@ import requests
 import dns.resolver
 from bottle import route, request, response, redirect, hook, error, default_app, view, static_file, template
 
+def set_content_type(fn):
+	def _return_json(*args, **kwargs):
+		response.headers['Content-Type'] = 'application/json'
+		if request.method != 'OPTIONS':
+			return fn(*args, **kwargs)
+	return _return_json
+
+def enable_cors(fn):
+	def _enable_cors(*args, **kwargs):
+		response.headers['Access-Control-Allow-Origin'] = '*'
+		response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, OPTIONS'
+		response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
+
+		if request.method != 'OPTIONS':
+			return fn(*args, **kwargs)
+	return _enable_cors
+
 def resolveDomain(domain, recordType, dnsAddr):
 	try:
 		records = []
@@ -81,6 +98,7 @@ def return_version():
 @route('/<record>')
 @route('/<record>/<type>')
 @route('/<record>/<type>.<ext>')
+@enable_cors
 def loadRecord(record="", type="", ext="html"):
 	try:
 		if record == "" or type == "":
