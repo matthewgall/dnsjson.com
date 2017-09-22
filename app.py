@@ -116,10 +116,7 @@ def loadRecord(record="", type="", ext="html"):
 
 	# We make a request to get information
 	data = resolveDomain(record, type.upper(), args.resolver)
-
-	if not len(data) > 0:
-		data.append("Unable to identify any records with type: {}".format(type))
-
+	
 	content = {
 		'name': record,
 		'type': type.upper(),

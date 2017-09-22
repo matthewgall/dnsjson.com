@@ -4,9 +4,13 @@
         <div class="well well-lg">
             <h1>{{name}} ({{type}})</h1>
             <p id="counterVal" style="font-size: 42px;">
-                <pre>
+<pre>
+% if len(records) == 0:
+Unable to identify any records of type {{type}}
+% else:
 % for rec in records:
 {{rec}}
+% end
 % end
 </pre>
             </p>
