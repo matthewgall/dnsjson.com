@@ -96,6 +96,9 @@ def return_version():
 		return "Unable to open version file."
 
 @route('/<record>')
+def route_redirect(record):
+	return redirect("/{}/A".format(record))
+
 @route('/<record>/<type>')
 @route('/<record>/<type>.<ext>')
 @enable_cors
