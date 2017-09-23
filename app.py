@@ -6,11 +6,14 @@ import dns.resolver
 from bottle import route, request, response, redirect, hook, error, default_app, view, static_file, template
 
 def set_content_type(fn):
-	def _return_json(*args, **kwargs):
-		response.headers['Content-Type'] = 'application/json'
+	def _return_type(*args, **kwargs):
+		if request.headers.get('Accept') == "application/json":
+			response.headers['Content-Type'] = 'application/json'
+		if request.headers.get('Accept') == "text/plain":
+			response.headers['Content-Type'] = 'text/plain'
 		if request.method != 'OPTIONS':
 			return fn(*args, **kwargs)
-	return _return_json
+	return _return_type
 
 def enable_cors(fn):
 	def _enable_cors(*args, **kwargs):
@@ -56,21 +59,6 @@ def returnError(code, msg, contentType="text/plain"):
 	response.content_type = contentType
 	return template('error')
 
-@hook('before_request')
-def determine_content_type():
-	if request.headers.get('Accept') == "application/json":
-		response.content_type = 'application/json'    
-	elif request.headers.get('Accept') == "text/plain":
-		response.content_type = 'text/plain'
-
-@hook('after_request')
-def log_to_console():
-	log.info("{} {} {}".format(
-		datetime.datetime.now(),
-		response.status_code,
-		request.url
-	))
-
 @route('/static/<filepath:path>')
 def server_static(filepath):
 	return static_file(filepath, root='views/static')
@@ -101,6 +89,7 @@ def route_redirect(record):
 
 @route('/<record>/<type>')
 @route('/<record>/<type>.<ext>')
+@set_content_type
 @enable_cors
 def loadRecord(record="", type="", ext="html"):
 	try:
@@ -111,7 +100,7 @@ def loadRecord(record="", type="", ext="html"):
 		if not ext in ["html","txt", "text","json"]:
 			ext = "html"
 		if ext == "json":
-			response.content_type = 'application/json'    
+			response.content_type = 'application/json'
 		elif ext in ["txt","text"]:
 			response.content_type = 'text/plain'
 	except ValueError:
