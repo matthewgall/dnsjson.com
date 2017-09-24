@@ -60,11 +60,11 @@ def returnError(code, msg, contentType="text/plain"):
 	return template('error')
 
 @route('/static/<filepath:path>')
-def server_static(filepath):
+def static(filepath):
 	return static_file(filepath, root='views/static')
 
 @route('/servers')
-def return_servers():
+def servers():
 	try:
 		response.content_type = 'text/plain'
 		return "\r\n".join(args.resolver.split(","))
@@ -72,7 +72,7 @@ def return_servers():
 		return "Unable to open servers file."
 		
 @route('/version')
-def return_version():
+def version():
 	try:
 		dirname, filename = os.path.split(os.path.abspath(__file__))
 		del filename
@@ -91,43 +91,42 @@ def route_redirect(record):
 @route('/<record>/<type>.<ext>')
 @set_content_type
 @enable_cors
-def loadRecord(record="", type="", ext="html"):
+def loadRecord(record, type='A', ext='html'):
 	try:
-		if record == "" or type == "":
+		if record == "":
+			raise ValueError
+		if not ext in ["html","txt", "text", "json"]:
 			raise ValueError
 		if not type.upper() in args.records.split(','):
 			raise ValueError
-		if not ext in ["html","txt", "text","json"]:
-			ext = "html"
-		if ext == "json":
-			response.content_type = 'application/json'
-		elif ext in ["txt","text"]:
-			response.content_type = 'text/plain'
 	except ValueError:
 		return returnError(404, "Not Found", "text/html")
 
+	if ext in ["json"]:
+		response.content_type = 'application/json'
+	if ext in ["txt", "text"]:
+		response.content_type = 'text/plain'
+
 	# We make a request to get information
 	data = resolveDomain(record, type.upper(), args.resolver)
-	
-	content = {
-		'name': record,
-		'type': type.upper(),
-		'records': data,
-		'recTypes': args.records.split(',')
-	}
 
-	if ext == "json" or response.content_type == 'application/json' :
-		del content['recTypes']
-		
-		jsonContent = {
-			"results": content
-		}
-			
-		return json.dumps(jsonContent)
-	elif ext in ["txt","text"] or response.content_type == "text/plain":
+	if response.content_type == 'application/json':
+		return json.dumps({
+			'results': {
+				'name': record,
+				'type': type.upper(),
+				'records': data,
+			}
+		})
+	elif response.content_type == "text/plain":
 		return "\r\n".join(data)
 	else:
-		return template('rec', content)
+		return template('rec', {
+			'name': record,
+			'type': type.upper(),
+			'records': data,
+			'recTypes': args.records.split(',')
+		})
 
 @route('/', method="POST")
 def postIndex():
