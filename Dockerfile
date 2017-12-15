@@ -6,7 +6,7 @@ RUN apk add --update \
 	python3 \
 	python3-dev \
 	py-pip \
-	py-virtualenv \
+	py3-virtualenv \
 	openssl-dev \
 	libffi-dev \
 	&& rm -rf /var/cache/apk/*
