@@ -167,7 +167,7 @@ if __name__ == '__main__':
 	parser.add_argument("--redis-ttl", default=os.getenv('REDIS_TTL', 60), help="redis time to cache records")
 
 	# Application settings
-	parser.add_argument("--records", default=os.getenv('APP_RECORDS', "A,AAAA,CNAME,DS,DNSKEY,MX,NS,NSEC,NSEC3,RRSIG,SOA,TXT"), help="supported records")
+	parser.add_argument("--records", default=os.getenv('APP_RECORDS', "A,AAAA,CAA,CNAME,DS,DNSKEY,MX,NS,NSEC,NSEC3,RRSIG,SOA,TXT"), help="supported records")
 	parser.add_argument("--resolver", default=os.getenv('APP_RESOLVER', '8.8.8.8'), help="resolver address")
 
 	# Verbose mode
