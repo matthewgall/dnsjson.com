@@ -128,29 +128,21 @@ def loadRecord(record, type='A', ext='html'):
 			'recTypes': args.records.split(',')
 		})
 
-@route('/', method="POST")
-def postIndex():
-	
-	try:
-		recordName = request.forms.get('recordName')
-		recordType = request.forms.get('recordType')
-
-		if not recordType == "Type" and not recordType in args.records.split(','):
-			raise ValueError
-		if recordName == "" or recordType == "Type":
-			raise ValueError
-		return redirect("/{}/{}".format(recordName, recordType))
-	except ValueError:
-		return returnError(404, "Not Found", "text/html")
-	except AttributeError:
-		return returnError(404, "Not Found", "text/html")
-
-@route('/')
+@route('/', ('GET', 'POST'))
 def index():
-	content = {
+
+	if request.method == "POST":
+		recordName = request.forms.get('recordName', '')
+		recordType = request.forms.get('recordType', '')
+
+		if recordName != '' and recordType in args.records.split(','):
+			return redirect("/{}/{}".format(recordName, recordType))
+		else:
+			return returnError(404, "We were not able to figure out what you were asking for", "text/html")
+
+	return template("home", {
 		'recTypes': args.records.split(',')
-	}
-	return template("home", content)
+	})
 
 if __name__ == '__main__':
 
