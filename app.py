@@ -25,32 +25,45 @@ def enable_cors(fn):
 			return fn(*args, **kwargs)
 	return _enable_cors
 
-def resolveDomain(domain, recordType, dnsAddr):
-	try:
-		records = []
-		
-		resolver = dns.resolver.Resolver()
-		resolver.nameservers = dnsAddr.split(',')
-		
-		if recordType in args.records.split(','):
-			lookup = resolver.query(domain, recordType)
-			for data in lookup:
-				if recordType in ['A', 'AAAA']:
-					records.append(data.address)
-				elif recordType in ['TXT']:
-					for rec in data.strings:
-						records.append(rec.decode("utf-8").replace('"', '').strip())
-				else:
-					records.append(str(data).replace('"', '').strip())
+def resolveDomain(domain, recordType, args):
+	records = []
+
+	if args.doh:
+		try:
+			payload = {
+				'name': domain,
+				'type': recordType
+			}
+			data = requests.get("{}".format(args.resolver), params=payload)
+			for rec in data.json()['Answer']:
+				records.append(rec['data'])
+		except:
+			return records
 		return records
-	except dns.resolver.NXDOMAIN:
-		return records
-	except dns.resolver.NoAnswer:
-		return records
-	except dns.exception.Timeout:
-		return records
-	except dns.resolver.NoNameservers:
-		return records
+	else:
+		try:
+			resolver = dns.resolver.Resolver()
+			resolver.nameservers = args.resolver.split(',')
+			
+			if recordType in args.records.split(','):
+				lookup = resolver.query(domain, recordType)
+				for data in lookup:
+					if recordType in ['A', 'AAAA']:
+						records.append(data.address)
+					elif recordType in ['TXT']:
+						for rec in data.strings:
+							records.append(rec.decode("utf-8").replace('"', '').strip())
+					else:
+						records.append(str(data).replace('"', '').strip())
+			return records
+		except dns.resolver.NXDOMAIN:
+			return records
+		except dns.resolver.NoAnswer:
+			return records
+		except dns.exception.Timeout:
+			return records
+		except dns.resolver.NoNameservers:
+			return records
 		
 @error('404')
 @error('403')
@@ -108,7 +121,7 @@ def loadRecord(record, type='A', ext='html'):
 		response.content_type = 'text/plain'
 
 	# We make a request to get information
-	data = resolveDomain(record, type.upper(), args.resolver)
+	data = resolveDomain(record, type.upper(), args)
 
 	if response.content_type == 'application/json':
 		return json.dumps({
@@ -159,6 +172,7 @@ if __name__ == '__main__':
 	parser.add_argument("--redis-ttl", default=os.getenv('REDIS_TTL', 60), help="redis time to cache records")
 
 	# Application settings
+	parser.add_argument("--doh", help="use DNS-over-HTTPS and treat --resolver as DNS-over-HTTPS capable (beta)", action="store_true")
 	parser.add_argument("--records", default=os.getenv('APP_RECORDS', "A,AAAA,CAA,CNAME,DS,DNSKEY,MX,NS,NSEC,NSEC3,RRSIG,SOA,TXT"), help="supported records")
 	parser.add_argument("--resolver", default=os.getenv('APP_RESOLVER', '8.8.8.8'), help="resolver address")
 
