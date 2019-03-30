@@ -17,4 +17,4 @@ COPY . /app
 RUN virtualenv -p python3 /env && /env/bin/pip install -r /app/requirements.txt
 
 EXPOSE 5000
-CMD ["/env/bin/python3", "/app/app.py"]
+CMD ["/env/bin/python3", "/app/app.py", "-i", "0.0.0.0", "-p", "5000"]
