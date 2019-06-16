@@ -7,9 +7,6 @@ DNS and dig is ugly, and implementing them into your web application is even ugl
 ## Introducing dnsjson.com
 Powered by Python and bottle, dnsjson.com is quick and simple to deploy, using all the power of [Docker](https://docker.io) you can be up and running in one command!
 
-## Developing
-To make editing easy, we're using Cloud9, an online IDE to allow you to get started quickly and simply! Getting started is easy, [click here](https://ide.c9.io/matthewgall/dnsjson) and follow the instructions
-
 ## Deploying
 Deploying dnsjson.com is easy using Docker:
 
