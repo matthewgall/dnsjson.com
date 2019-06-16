@@ -30,7 +30,7 @@ Returns the current running version of dnsjson.com from the released commit hash
 
     The MIT License (MIT)
 
-    Copyright (c) 2015 - 2017 Matthew Gall
+    Copyright (c) 2015 - 2019 Matthew Gall
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
