@@ -1,14 +1,14 @@
-services:
-  - docker:dind
-
-stages:
-  - build
+variables:
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_TLS_CERTDIR: ""
 
 build:
   image: docker:latest
   stage: build
+  services:
+    - docker:dind
   before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_TOKEN"    
   script:
-    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
-    - docker push "$CI_REGISTRY_IMAGE"
+    - docker build --pull -t matthewgall/dnsjson.com:latest .
+    - docker push matthewgall/dnsjson.com:latest
