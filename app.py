@@ -162,19 +162,16 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 
 	# Server settings
-	parser.add_argument("-i", "--host", default=os.getenv('IP', '127.0.0.1'), help="server ip")
+	parser.add_argument("-i", "--host", default=os.getenv('HOST', '127.0.0.1'), help="server ip")
 	parser.add_argument("-p", "--port", default=os.getenv('PORT', 5000), help="server port")
 
 	# Redis settings
-	parser.add_argument("--redis-host", default=os.getenv('REDIS_HOST', 'redis'), help="redis hostname")
-	parser.add_argument("--redis-port", default=os.getenv('REDIS_PORT', 6379), help="redis port")
-	parser.add_argument("--redis-pw", default=os.getenv('REDIS_PW', ''), help="redis password")
-	parser.add_argument("--redis-ttl", default=os.getenv('REDIS_TTL', 60), help="redis time to cache records")
+	parser.add_argument("--redis", default=os.getenv('REDISTOGO_URL', os.getenv('REDIS', 'redis://localhost:6379/0')), help="redis connection string")
 
 	# Application settings
 	parser.add_argument("--doh", help="use DNS-over-HTTPS and treat --resolver as DNS-over-HTTPS capable (beta)", action="store_true")
-	parser.add_argument("--records", default=os.getenv('APP_RECORDS', "A,AAAA,CAA,CNAME,DS,DNSKEY,MX,NS,NSEC,NSEC3,RRSIG,SOA,TXT"), help="supported records")
-	parser.add_argument("--resolver", default=os.getenv('APP_RESOLVER', '8.8.8.8'), help="resolver address")
+	parser.add_argument("--records", default=os.getenv('RECORDS', "A,AAAA,CAA,CNAME,DS,DNSKEY,MX,NS,NSEC,NSEC3,RRSIG,SOA,TXT"), help="supported records")
+	parser.add_argument("--resolver", default=os.getenv('RESOLVER', '8.8.8.8'), help="resolver address")
 
 	# Verbose mode
 	parser.add_argument("--verbose", "-v", help="increase output verbosity", action="store_true")
