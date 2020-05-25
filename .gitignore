@@ -16,3 +16,4 @@ local/
 
 ## application specific ##
 db/*.json
+.direnv/

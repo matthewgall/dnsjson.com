@@ -6,7 +6,6 @@ RUN apk add --update \
 	python3 \
 	python3-dev \
 	py-pip \
-	py3-virtualenv \
 	openssl-dev \
 	libffi-dev \
 	&& rm -rf /var/cache/apk/*
@@ -14,7 +13,8 @@ RUN apk add --update \
 WORKDIR /app
 COPY . /app
 
-RUN virtualenv -p python3 /env && /env/bin/pip install -r /app/requirements.txt
+RUN pip3 install --upgrade pip && \
+    pip3 install -r /app/requirements.txt
 
 EXPOSE 5000
-CMD ["/env/bin/python3", "/app/app.py"]
+CMD ["python3", "/app/app.py"]
