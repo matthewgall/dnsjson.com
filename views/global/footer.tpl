@@ -1,6 +1,6 @@
 <footer class="footer">
     <div class="container">
-        <p class="text-muted">&copy; 2015 - <script type="text/javascript">document.write(new Date().getFullYear());</script> dnsjson.com - <a href="https://github.com/matthewgall/dnsjson.com">GitHub</a></p>
+        <p class="text-muted">&copy; 2015 - <script type="text/javascript">document.write(new Date().getFullYear());</script> dnsjson.com - <a href="https://codedin.wales/matthew/dnsjson.com">GitLab</a></p>
     </div>
 </footer>
 
