@@ -15,7 +15,7 @@ Powered by Python and bottle, dnsjson.com is quick and simple to deploy, using a
 ## Deploying
 Deploying dnsjson.com is easy using Docker:
 
-    docker run -p 80:5000 quay.io/matthewgall/dnsjson.com
+    docker run -p 80:5000 matthewgall/dnsjson.com
 
 Honestly, that simple (and none of that one line wget direct to your terminal)
 
@@ -32,7 +32,7 @@ Returns the current running version of dnsjson.com from the released commit hash
 
     The MIT License (MIT)
 
-    Copyright (c) 2015 - 2019 Matthew Gall
+    Copyright (c) 2015 - 2020 Matthew Gall
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
