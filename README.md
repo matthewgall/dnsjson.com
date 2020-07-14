@@ -1,6 +1,11 @@
 # dnsjson.com
 
-[![Docker Repository on Quay](https://quay.io/repository/matthewgall/dnsjson.com/status "Docker Repository on Quay")](https://quay.io/repository/matthewgall/dnsjson.com)
+
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/matthewgall/dnsjson.com/build?color=db422a&logoColor=FFFFFF&style=for-the-badge)
+![Docker Pulls](https://img.shields.io/docker/pulls/matthewgall/dnsjson.com?color=db422a&logoColor=2a6bdb&style=for-the-badge)
+![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/matthewgall/dnsjson.com?color=db422a&logoColor=2a6bdb&style=for-the-badge)
+![Docker Stars](https://img.shields.io/docker/stars/matthewgall/dnsjson.com?color=db422a&logoColor=2a6bdb&style=for-the-badge)
+![Docker Image Version (latest by date)](https://img.shields.io/docker/v/matthewgall/dnsjson.com?color=db422a&logoColor=2a6bdb&style=for-the-badge)
 
 DNS and dig is ugly, and implementing them into your web application is even uglier. But not any longer, for here is dnsjson.com
 
