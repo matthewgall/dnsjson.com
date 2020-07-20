@@ -3,14 +3,20 @@ export NAMESPACE?=dnsjson
 export IMAGE?=matthewgall/dnsjson.com
 export COLO:=$(shell kubectx -c)
 
-.PHONY: apply
+.PHONY: apply apply-all
 apply:
-	@cat k8s.yml | envsubst | kubectl apply -n ${NAMESPACE} -f -
+	@.utils/apply ${COLO}
+apply-all:
+	@.utils/apply all
 
-.PHONY: delete
+.PHONY: delete delete-all
 delete:
-	@cat k8s.yml | envsubst | kubectl delete -n ${NAMESPACE} -f -
+	@.utils/delete ${COLO}
+delete-all:
+	@.utils/delete all
 
-.PHONY: deploy
-deploy:
-	kubectl rollout restart deployment/${NAME} -n ${NAMESPACE} && kubectl rollout status deployment/${NAME} -n ${NAMESPACE}
+.PHONY: rollout rollout-all
+rollout:
+	@.utils/rollout ${COLO}
+rollout-all:
+	@.utils/rollout all
