@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: dnsjson
+  name: ${NAMESPACE}
 ---
 apiVersion: apps/v1
 kind: Deployment
