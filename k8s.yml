@@ -31,7 +31,7 @@ spec:
           - name: REDIS
             value: redis://${NAME}-redis.${NAMESPACE}.svc.cluster.local:6379
           - name: RESOLVER
-            value: '1.1.1.1'
+            value: '1.1.1.1,1.0.0.1,8.8.8.8,8.8.4.4'
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -61,12 +61,12 @@ metadata:
   name: ${NAME}-ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    cert-manager.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: zerossl-prod
   labels:
     "use-cloudflare-solver": "true"
 spec:
   rules:
-  - host: "*.dnsjson.com"
+  - host: "www.dnsjson.com"
     http:
       paths:
       - path: /
@@ -82,7 +82,7 @@ spec:
           servicePort: http
   tls:
   - hosts:
-    - '*.dnsjson.com'
+    - 'www.dnsjson.com'
     - 'dnsjson.com'
     secretName: ${NAME}-cert
 ---
