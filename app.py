@@ -46,7 +46,7 @@ def resolveDomain(domain, recordType, args):
 			resolver.nameservers = args.resolver.split(',')
 			
 			if recordType in args.records.split(','):
-				lookup = resolver.query(domain, recordType)
+				lookup = resolver.resolve(domain, recordType)
 				for data in lookup:
 					if recordType in ['A', 'AAAA']:
 						records.append(data.address)
