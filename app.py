@@ -166,7 +166,7 @@ if __name__ == '__main__':
 	parser.add_argument("-p", "--port", default=os.getenv('PORT', 5000), help="server port")
 
 	# Redis settings
-	parser.add_argument("--redis", default=os.getenv('REDISTOGO_URL', os.getenv('REDIS', 'redis://localhost:6379/0')), help="redis connection string")
+	parser.add_argument("--redis", default=os.getenv('REDIS', 'redis://localhost:6379/0'), help="redis connection string")
 
 	# Application settings
 	parser.add_argument("--doh", help="use DNS-over-HTTPS and treat --resolver as DNS-over-HTTPS capable (beta)", action="store_true")
